@@ -1,6 +1,8 @@
 from django.urls import reverse
 from django.utils.html import format_html
 
+from .settings import CHANGE_LINK_CLASS, CHANGELIST_LINK_CLASS
+
 
 def parse_field_config(links_config):
 
@@ -20,8 +22,8 @@ def underscore_to_capitalize(string):
     return string.replace('_', ' ').capitalize()
 
 
-def get_link_field(url, label):
-    return format_html('<a href="{}" class="changelink">{}</a>', url, label)
+def get_link_field(url, link_class, label):
+    return format_html('<a href="{}" class="{}">{}</a>', url, link_class, label)
 
 
 def get_reverse_relation_name(instance, model_field_name):
@@ -70,6 +72,7 @@ class AdminChangeLinksMixin():
                 ),
                 args=[target_instance.pk]
             ),
+            CHANGE_LINK_CLASS,
             self.link_label(admin_field_name, target_instance)
         )
 
@@ -117,6 +120,7 @@ class AdminChangeLinksMixin():
 
         return get_link_field(
             '{}?{}={}'.format(get_url(), get_lookup_filter(), instance.pk),
+            CHANGELIST_LINK_CLASS,
             get_label()
         )
 
